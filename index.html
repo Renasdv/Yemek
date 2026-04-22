@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUCIFER & USERLOOS PANEL</title>
+    <title>LUCIFER & USERLOOS | DENIS34</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
@@ -17,7 +17,7 @@
         .nav-link:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 15px var(--neon-blue); }
         .main-content { transition: 0.3s; padding: 20px; margin-top: 80px; }
         .card-custom { background: var(--card-bg); border: 1px solid #333; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .form-control { background: #222; border: 1px solid #444; color: white; border-radius: 10px; }
+        .form-control { background: #222; border: 1px solid #444; color: white; border-radius: 10px; margin-bottom: 10px; }
         .form-control:focus { background: #222; color: white; border-color: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
         .btn-custom { background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue); font-weight: bold; transition: 0.4s; border-radius: 10px; text-transform: uppercase; }
         .btn-custom:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 20px var(--neon-blue); }
@@ -31,7 +31,8 @@
 <div id="login-screen">
     <h2 class="navbar-brand mb-4">LUCIFER & USERLOOS</h2>
     <div class="card-custom" style="width: 320px;">
-        <input type="password" id="login-pass" class="form-control mb-3" placeholder="Panel Şifresi">
+        <input type="text" id="login-user" class="form-control" placeholder="Kullanıcı Adı (denis34)">
+        <input type="password" id="login-pass" class="form-control" placeholder="Şifre">
         <button onclick="checkLogin()" class="btn btn-custom w-100">Sisteme Sız</button>
     </div>
 </div>
@@ -44,9 +45,9 @@
 </nav>
 
 <div class="sidebar" id="sidebar">
+    <a class="nav-link" onclick="changeMode('Ad Soyad Sorgu', 'ad-soyad')"><i class="fas fa-search me-2"></i> Ad Soyad Sorgu</a>
     <a class="nav-link" onclick="changeMode('Sülale Sorgu', 'sulale')"><i class="fas fa-users me-2"></i> Sülale Sorgu</a>
     <a class="nav-link" onclick="changeMode('TC Sorgu', 'tc')"><i class="fas fa-id-card me-2"></i> TC Sorgu</a>
-    <a class="nav-link" onclick="changeMode('Ad Soyad Sorgu', 'ad-soyad')"><i class="fas fa-search me-2"></i> Ad Soyad Sorgu</a>
     <a class="nav-link" onclick="changeMode('GSM Sorgu', 'gsm')"><i class="fas fa-phone me-2"></i> GSM Sorgu</a>
 </div>
 
@@ -55,10 +56,12 @@
         <h3 id="mode-title">Ad Soyad Sorgu</h3>
         <div class="card-custom mt-4 mx-auto" style="max-width: 500px;">
             <div id="inputs-container">
-                <input type="text" id="input1" class="form-control mb-3" placeholder="Ad">
-                <input type="text" id="input2" class="form-control mb-3" placeholder="Soyad">
+                <input type="text" id="ad" class="form-control" placeholder="Ad">
+                <input type="text" id="soyad" class="form-control" placeholder="Soyad">
+                <input type="text" id="il" class="form-control" placeholder="İl (Opsiyonel)">
+                <input type="text" id="ilce" class="form-control" placeholder="İlçe (Opsiyonel)">
             </div>
-            <button onclick="startSorgu()" class="btn btn-custom w-100 py-3">SORGULA</button>
+            <button onclick="startSorgu()" class="btn btn-custom w-100 py-3 mt-2">SORGULA</button>
         </div>
 
         <div id="loading">
@@ -71,15 +74,17 @@
 </div>
 
 <script>
-    // SON CURL VERİLERİNDEN ALINAN TAZE ÇEREZLER
+    // GÜNCEL ÇEREZLER
     const COOKIE_DATA = "device_id=2c887164-f84f-4a2c-a649-0dc24bcb27131776870983609; PHPSESSID=j0ck7br4bglpn7b1ul28qlqkgq; cf_clearance=Gv4HOrxXp8oArFrcewJ_r3cznSxsO9bjIcGO8x6epiY-1776873798-1.2.1.1-3SE9mGQ19ssk04wSe3wBgrsF9Vqp0gOC0AcTjoGE4PN1zAZUJgWGog6UVgA4Ia22u7JVvG.UuASBJ50nLkpwvhe6Xl3SAIfLekZexVYYXwkH0N0uVmP4DPdDFwxYtIcFsMgz8zmiLKpVXmQX6mmLE5gA9Lq2bS3Mhb7iIuBisIAlm7yzv0C9I0Sgze.2Fxl2Cw_DkeWNGToLDf2F1tGVJZY8A_BOu8KeHQT2ZwrNrkuQ7.oJPxnskNRayJ91kV4pfHKSXHit76JTCwjUMKkx9FW1USz_aqLGNBIxBhBsRiFdFG3PkgFFod4VooUQcOsE_nJHBrRh2GGmtfH809nD3Q";
     
     let currentEndpoint = "ad-soyad";
 
     function checkLogin() {
-        if(document.getElementById('login-pass').value === "lucifer123") {
+        const u = document.getElementById('login-user').value;
+        const p = document.getElementById('login-pass').value;
+        if(u === "denis34" && p === "567890123a") {
             document.getElementById('login-screen').style.display = "none";
-        } else { alert("Hatalı Şifre!"); }
+        } else { alert("Kullanıcı adı veya şifre hatalı!"); }
     }
 
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
@@ -90,9 +95,13 @@
         const container = document.getElementById('inputs-container');
         
         if(endpoint === 'ad-soyad') {
-            container.innerHTML = '<input type="text" id="input1" class="form-control mb-3" placeholder="Ad"><input type="text" id="input2" class="form-control mb-3" placeholder="Soyad">';
+            container.innerHTML = `
+                <input type="text" id="ad" class="form-control" placeholder="Ad">
+                <input type="text" id="soyad" class="form-control" placeholder="Soyad">
+                <input type="text" id="il" class="form-control" placeholder="İl (Opsiyonel)">
+                <input type="text" id="ilce" class="form-control" placeholder="İlçe (Opsiyonel)">`;
         } else {
-            container.innerHTML = `<input type="text" id="input1" class="form-control mb-3" placeholder="${title} giriniz...">`;
+            container.innerHTML = `<input type="text" id="sorgu_val" class="form-control" placeholder="${title} giriniz...">`;
         }
         toggleSidebar();
     }
@@ -103,16 +112,17 @@
         loading.style.display = "block";
         results.innerHTML = "";
 
-        // CORS BYPASS KÖPRÜSÜ
         const proxyUrl = "https://cors-anywhere.herokuapp.com/"; 
         const targetUrl = `https://synckids.space/${currentEndpoint}.php`;
 
         const bodyData = new URLSearchParams();
         if(currentEndpoint === 'ad-soyad') {
-            bodyData.append('ad', document.getElementById('input1').value);
-            bodyData.append('soyad', document.getElementById('input2').value);
+            bodyData.append('ad', document.getElementById('ad').value);
+            bodyData.append('soyad', document.getElementById('soyad').value);
+            bodyData.append('il', document.getElementById('il').value);
+            bodyData.append('ilce', document.getElementById('ilce').value);
         } else {
-            bodyData.append('sorgu', document.getElementById('input1').value);
+            bodyData.append('sorgu', document.getElementById('sorgu_val').value);
         }
 
         try {
@@ -132,16 +142,15 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, "text/html");
                 const table = doc.querySelector("table");
-                table.className = "table table-dark table-custom table-hover mt-3";
+                table.className = "table table-dark table-striped mt-3";
                 results.innerHTML = `<div class="table-responsive">${table.outerHTML}</div>`;
             } else {
-                results.innerHTML = `<div class="alert alert-danger">Veri bulunamadı veya oturum hatası!</div>`;
+                results.innerHTML = `<div class="alert alert-danger">Oturum hatası veya veri bulunamadı!</div>`;
             }
         } catch (e) {
             results.innerHTML = `<div class="alert alert-warning">
-                <b>Erişim İzni Gerekiyor!</b><br>
-                Lütfen şu linke tıklayıp butona bas ve geri dön:<br>
-                <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" class="btn btn-info btn-sm mt-2">İzin Al</a>
+                <b>CORS Erişimi Gerekiyor</b><br>
+                <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" class="btn btn-info btn-sm mt-2">İzni Aktif Et</a>
             </div>`;
         } finally { loading.style.display = "none"; }
     }
