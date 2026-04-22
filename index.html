@@ -3,155 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUCIFER & USERLOOS | Master Panel</title>
+    <title>LUCIFER & USERLOOS PANEL</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
-        :root { --neon-blue: #00f2ff; --bg-black: #050505; --card-dark: #121212; }
-        body { background-color: var(--bg-black); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        
-        /* Şifre Ekranı */
-        #login-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 10000; display: flex; align-items: center; justify-content: center;
-        }
-        .login-card {
-            background: var(--card-dark); border: 1px solid var(--neon-blue);
-            padding: 30px; border-radius: 20px; box-shadow: 0 0 20px var(--neon-blue);
-            text-align: center; width: 320px;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            height: 100%; width: 0; position: fixed; z-index: 2000;
-            top: 0; left: 0; background: #000; overflow-x: hidden;
-            transition: 0.5s; padding-top: 60px; border-right: 1px solid var(--neon-blue);
-        }
-        .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 18px; color: #888; display: block; transition: 0.3s; }
-        .sidebar a:hover { color: var(--neon-blue); background: #111; }
-        .closebtn { position: absolute; top: 10px; right: 25px; font-size: 36px; color: white; cursor: pointer; }
-
-        /* Neon Yazı */
-        .brand-text {
-            color: var(--neon-blue); font-weight: 900; letter-spacing: 3px;
-            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
-        }
-
-        /* Sorgu Formları */
-        .query-box { background: var(--card-dark); border-radius: 15px; border: 1px solid #333; padding: 25px; margin-top: 20px; }
-        .form-control { background: #000; border: 1px solid #444; color: white; }
-        .form-control:focus { background: #000; color: white; border-color: var(--neon-blue); box-shadow: none; }
-        .btn-neon { background: var(--neon-blue); color: black; font-weight: bold; border: none; transition: 0.3s; }
-        .btn-neon:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--neon-blue); }
-
-        /* Tablo Stili */
-        .table-custom { border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+        :root { --neon-blue: #00f2ff; --dark-bg: #0a0a0a; --card-bg: #151515; }
+        body { background-color: var(--dark-bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        .navbar { background: rgba(20, 20, 20, 0.95); border-bottom: 2px solid var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
+        .navbar-brand { color: var(--neon-blue) !important; font-weight: bold; text-shadow: 0 0 10px var(--neon-blue); letter-spacing: 2px; }
+        .sidebar { height: 100vh; width: 250px; position: fixed; top: 0; left: -250px; background: var(--card-bg); transition: 0.3s; z-index: 1000; padding-top: 80px; border-right: 1px solid var(--neon-blue); }
+        .sidebar.active { left: 0; }
+        .nav-link { color: #ccc; padding: 15px 25px; border-bottom: 1px solid #222; transition: 0.3s; }
+        .nav-link:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 15px var(--neon-blue); }
+        .main-content { transition: 0.3s; padding: 20px; margin-top: 80px; }
+        .card-custom { background: var(--card-bg); border: 1px solid #333; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .form-control { background: #222; border: 1px solid #444; color: white; border-radius: 10px; }
+        .form-control:focus { background: #222; color: white; border-color: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
+        .btn-custom { background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue); font-weight: bold; transition: 0.4s; border-radius: 10px; text-transform: uppercase; }
+        .btn-custom:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 20px var(--neon-blue); }
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .table-custom { background: #1a1a1a; border-radius: 10px; overflow: hidden; color: white; }
         .table-custom th { background: var(--neon-blue); color: black; }
-        .table-custom td { background: #111; color: white; border-color: #222; }
-
-        .loader { display: none; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--neon-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .table-custom td { border-color: #333; }
+        #loading { display: none; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-<div id="login-page">
-    <div class="login-card">
-        <h4 class="brand-text mb-4">LUCIFER & USERLOOS</h4>
-        <input type="password" id="pass" class="form-control mb-3 text-center" placeholder="ŞİFRE">
-        <button class="btn btn-neon w-100" onclick="unlock()">SİSTEME GİR</button>
+<div id="login-screen">
+    <h2 class="navbar-brand mb-4">LUCIFER & USERLOOS</h2>
+    <div class="card-custom" style="width: 320px;">
+        <input type="password" id="login-pass" class="form-control mb-3" placeholder="Panel Şifresi">
+        <button onclick="checkLogin()" class="btn btn-custom w-100">Sisteme Sız</button>
     </div>
 </div>
 
-<div id="mySidebar" class="sidebar">
-    <span class="closebtn" onclick="closeNav()">&times;</span>
-    <div class="text-center mb-4"><small class="text-secondary">HOŞGELDİNİZ</small></div>
-    <a href="#" onclick="setApp('ad-soyad')"><i class="bi bi-search"></i> Ad Soyad Sorgu</a>
-    <a href="#" onclick="setApp('sulale')"><i class="bi bi-people"></i> Sülale Sorgu</a>
-    <a href="#" onclick="setApp('gsm-tc')"><i class="bi bi-phone"></i> GSM -> TC (v3)</a>
-    <a href="#" onclick="setApp('tc-gsm')"><i class="bi bi-hash"></i> TC -> GSM (v3)</a>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+        <button class="btn text-white me-3" onclick="toggleSidebar()"><i class="fas fa-bars fa-lg"></i></button>
+        <a class="navbar-brand" href="#">LUCIFER & USERLOOS</a>
+    </div>
+</nav>
+
+<div class="sidebar" id="sidebar">
+    <a href="#" class="nav-link" onclick="changeMode('Sülale Sorgu', 'sulale')"><i class="fas fa-users me-2"></i> Sülale Sorgu</a>
+    <a href="#" class="nav-link" onclick="changeMode('TC Sorgu', 'tc')"><i class="fas fa-id-card me-2"></i> TC Sorgu</a>
+    <a href="#" class="nav-link" onclick="changeMode('GSM Sorgu', 'gsm')"><i class="fas fa-phone me-2"></i> GSM Sorgu</a>
 </div>
 
-<div id="main" class="container py-4">
-    <div class="d-flex justify-content-between align-items-center">
-        <i class="bi bi-list fs-1" style="cursor:pointer" onclick="openNav()"></i>
-        <h3 class="brand-text m-0">LUCIFER & USERLOOS</h3>
-    </div>
-
-    <div id="app-content">
-        <div class="text-center mt-5 py-5">
-            <i class="bi bi-cpu fs-1 text-secondary"></i>
-            <h2 class="mt-3">Sorgu Modülü Seçin</h2>
-            <p class="text-secondary">Soldaki menüden yapmak istediğiniz işlemi seçerek başlayın.</p>
+<div class="main-content" id="main-content">
+    <div class="container">
+        <h3 id="mode-title">Sülale Sorgu</h3>
+        <div class="card-custom mt-4">
+            <div class="mb-3">
+                <input type="text" id="sorgu-input" class="form-control form-control-lg" placeholder="Sorgulanacak Değer...">
+            </div>
+            <button onclick="startSorgu()" class="btn btn-custom w-100 py-3">SORGULA</button>
         </div>
-    </div>
 
-    <div class="loader" id="loading"></div>
-    <div id="result-box" class="mt-4"></div>
+        <div id="loading" class="text-center">
+            <div class="spinner-border text-info" role="status"></div>
+            <p class="mt-2">Veriler Veritabanından Çekiliyor...</p>
+        </div>
+
+        <div id="result-box" class="mt-4"></div>
+    </div>
 </div>
 
 <script>
-    // ŞİFRE VE OTURUM BİLGİLERİ (Doğrudan buradan değiştir)
-    const ACCESS_KEY = "lucifer123";
-    const COOKIE_DATA = "PHPSESSID=agj3tub38job8com8nlqjjrtk1; device_id=2c887164-f84f-4a2c-a649-0dc24bcb27131776870983609; cf_clearance=tUv6Q09uAkwenHv8_N_ky1sXNszK1vSpyUuHP6epdME-1776871042-1.2.1.1-0KBMGu.wLcNchtLhaeE1IWtjD40zqsnP6ARPzrrYthIbu6Ma7yF6deKjCUHkB1H_3ZzH.cjZqpULzlVL_W4uPw9JjkrHn0yUeurX_20CZTzvolNsyO5nkfd6EkDa2WC5MrTv1nk5Jv2SvFjCsmMgGDhQO5rHgQdxL8_Z7HQnr14a_p5g7oBT1YcBdvH6fL_KlEXjpAZ7VtI1iSXO_mjo4OmMfIUJRba3lf8TH_K.A6rId_WKxgeb49WOtjY7zf9VR_QO6fnHA1Di7Uc2mEEoF5ysVfPZkl0LRDeUqFC9hD6EaXOcffsq7maQfVKd7LcfWLvIn5OHutPOqK8ClE6C7A";
+    // GÜNCEL ÇEREZLER VE AYARLAR
+    const COOKIE_DATA = "PHPSESSID=agj3tub38job8com8nlqjjrtk1; cf_clearance=tUv6Q09uAkwenHv8_N_ky1sXNszK1vSpyUuHP6epdME-1744903332-1.2.1.1-P_N_ky1sXNszK1vSpyUuHP6epdME; device_id=2c887164-f84f-4a2c-a649-0dc24bcb27131776870983609";
+    let currentEndpoint = "sulale";
 
-    function unlock() {
-        if(document.getElementById('pass').value === ACCESS_KEY) {
-            document.getElementById('login-page').style.display = 'none';
-        } else { alert("Yanlış Şifre!"); }
+    function checkLogin() {
+        if(document.getElementById('login-pass').value === "lucifer123") {
+            document.getElementById('login-screen').style.display = "none";
+        } else { alert("Hatalı Şifre!"); }
     }
 
-    function openNav() { document.getElementById("mySidebar").style.width = "280px"; }
-    function closeNav() { document.getElementById("mySidebar").style.width = "0"; }
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
 
-    function setApp(type) {
-        closeNav();
-        let html = "";
-        if(type === 'ad-soyad') {
-            html = `<h3>Ad Soyad Sorgu</h3><div class="query-box">
-                    <input id="in_ad" class="form-control mb-2" placeholder="AD">
-                    <input id="in_soyad" class="form-control mb-2" placeholder="SOYAD">
-                    <input id="in_il" class="form-control mb-3" placeholder="İL">
-                    <button class="btn btn-neon w-100" onclick="apiSorgu('ad-soyad.php', {ad:in_ad.value, soyad:in_soyad.value, il:in_il.value})">SORGULA</button></div>`;
-        } else if(type === 'sulale') {
-            html = `<h3>Sülale Sorgu</h3><div class="query-box"><input id="in_tc" class="form-control mb-3" placeholder="TC NO"><button class="btn btn-neon w-100" onclick="apiSorgu('sulale-sorgu.php', {tc:in_tc.value})">SORGULA</button></div>`;
-        } else if(type === 'gsm-tc') {
-            html = `<h3>GSM -> TC (v3)</h3><div class="query-box"><input id="in_gsm" class="form-control mb-3" placeholder="GSM (5XXXXXXXXX)"><button class="btn btn-neon w-100" onclick="apiSorgu('gsm-tckn3.php', {gsm:in_gsm.value})">SORGULA</button></div>`;
-        }
-        document.getElementById('app-content').innerHTML = html;
-        document.getElementById('result-box').innerHTML = "";
+    function changeMode(title, endpoint) {
+        document.getElementById('mode-title').innerText = title;
+        currentEndpoint = endpoint;
+        toggleSidebar();
     }
 
-    async function apiSorgu(endpoint, data) {
+    async function startSorgu() {
+        const val = document.getElementById('sorgu-input').value;
+        if(!val) return alert("Bir değer girin!");
+
         const loading = document.getElementById('loading');
         const results = document.getElementById('result-box');
+        
         loading.style.display = "block";
         results.innerHTML = "";
 
-        // CORS Köprüsü (Tarayıcı engelini aşmak için)
-        const proxyUrl = "https://corsproxy.io/?";
-        const targetUrl = `https://synckids.space/${endpoint}`;
+        // GITHUB PAGES İÇİN CORS BYPASS KÖPRÜSÜ
+        const proxyUrl = "https://cors-anywhere.herokuapp.com/"; 
+        const targetUrl = `https://synckids.space/api/${currentEndpoint}`; // Endpoint yapısına göre /api/ eklendi
 
         try {
-            const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+            const response = await fetch(proxyUrl + targetUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest',
                     'Cookie': COOKIE_DATA
                 },
-                body: new URLSearchParams(data)
+                body: new URLSearchParams({ 'sorgu': val }) // 'sorgu' parametre adını ihtiyaca göre değiştirebilirsin
             });
 
             const text = await response.text();
-            // Burada gelen HTML'i parse edip tabloya dökme işlemi yapılacak
-            // Şimdilik gelen veriyi doğrudan gösteriyoruz
-            if(text.includes("<table")) {
-                results.innerHTML = `<div class="table-responsive table-custom mt-3">${text}</div>`;
+            
+            if (text.includes("<table")) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, "text/html");
+                const table = doc.querySelector("table");
+                table.className = "table table-custom table-hover table-striped";
+                results.innerHTML = `<div class="table-responsive">${table.outerHTML}</div>`;
             } else {
-                results.innerHTML = `<div class="alert alert-danger">Veri bulunamadı veya oturum hatası!</div>`;
+                results.innerHTML = `<div class="alert alert-danger text-center">Veri bulunamadı veya oturum hatası!</div>`;
             }
         } catch (e) {
-            results.innerHTML = `<div class="alert alert-warning">Hata: ${e.message}</div>`;
+            results.innerHTML = `<div class="alert alert-warning text-center">
+                <b>Erişim Engellendi!</b><br>
+                Lütfen şu linke tıklayıp butona basarak izin al ve buraya dönüp tekrar sorgula:<br>
+                <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" class="btn btn-dark mt-2">İzin Al ve Aktif Et</a>
+            </div>`;
         } finally { loading.style.display = "none"; }
     }
 </script>
