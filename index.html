@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
         :root { --neon-blue: #00f2ff; --dark-bg: #0a0a0a; --card-bg: #151515; }
-        body { background-color: var(--dark-bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        body { background-color: var(--dark-bg); color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .navbar { background: rgba(20, 20, 20, 0.95); border-bottom: 2px solid var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
         .navbar-brand { color: var(--neon-blue) !important; font-weight: bold; text-shadow: 0 0 10px var(--neon-blue); letter-spacing: 2px; }
         .sidebar { height: 100vh; width: 250px; position: fixed; top: 0; left: -250px; background: var(--card-bg); transition: 0.3s; z-index: 1000; padding-top: 80px; border-right: 1px solid var(--neon-blue); }
         .sidebar.active { left: 0; }
-        .nav-link { color: #ccc; padding: 15px 25px; border-bottom: 1px solid #222; transition: 0.3s; }
+        .nav-link { color: #ccc; padding: 15px 25px; border-bottom: 1px solid #222; transition: 0.3s; cursor: pointer; }
         .nav-link:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 15px var(--neon-blue); }
         .main-content { transition: 0.3s; padding: 20px; margin-top: 80px; }
         .card-custom { background: var(--card-bg); border: 1px solid #333; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
@@ -22,9 +22,7 @@
         .btn-custom { background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue); font-weight: bold; transition: 0.4s; border-radius: 10px; text-transform: uppercase; }
         .btn-custom:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 20px var(--neon-blue); }
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .table-custom { background: #1a1a1a; border-radius: 10px; overflow: hidden; color: white; }
-        .table-custom th { background: var(--neon-blue); color: black; }
-        .table-custom td { border-color: #333; }
+        .table-custom { background: #1a1a1a !important; color: white !important; border: 1px solid var(--neon-blue); }
         #loading { display: none; margin: 20px 0; }
     </style>
 </head>
@@ -46,24 +44,26 @@
 </nav>
 
 <div class="sidebar" id="sidebar">
-    <a href="#" class="nav-link" onclick="changeMode('Sülale Sorgu', 'sulale')"><i class="fas fa-users me-2"></i> Sülale Sorgu</a>
-    <a href="#" class="nav-link" onclick="changeMode('TC Sorgu', 'tc')"><i class="fas fa-id-card me-2"></i> TC Sorgu</a>
-    <a href="#" class="nav-link" onclick="changeMode('GSM Sorgu', 'gsm')"><i class="fas fa-phone me-2"></i> GSM Sorgu</a>
+    <a class="nav-link" onclick="changeMode('Sülale Sorgu', 'sulale')"><i class="fas fa-users me-2"></i> Sülale Sorgu</a>
+    <a class="nav-link" onclick="changeMode('TC Sorgu', 'tc')"><i class="fas fa-id-card me-2"></i> TC Sorgu</a>
+    <a class="nav-link" onclick="changeMode('Ad Soyad Sorgu', 'ad-soyad')"><i class="fas fa-search me-2"></i> Ad Soyad Sorgu</a>
+    <a class="nav-link" onclick="changeMode('GSM Sorgu', 'gsm')"><i class="fas fa-phone me-2"></i> GSM Sorgu</a>
 </div>
 
 <div class="main-content" id="main-content">
-    <div class="container">
-        <h3 id="mode-title">Sülale Sorgu</h3>
-        <div class="card-custom mt-4">
-            <div class="mb-3">
-                <input type="text" id="sorgu-input" class="form-control form-control-lg" placeholder="Sorgulanacak Değer...">
+    <div class="container text-center">
+        <h3 id="mode-title">Ad Soyad Sorgu</h3>
+        <div class="card-custom mt-4 mx-auto" style="max-width: 500px;">
+            <div id="inputs-container">
+                <input type="text" id="input1" class="form-control mb-3" placeholder="Ad">
+                <input type="text" id="input2" class="form-control mb-3" placeholder="Soyad">
             </div>
             <button onclick="startSorgu()" class="btn btn-custom w-100 py-3">SORGULA</button>
         </div>
 
-        <div id="loading" class="text-center">
+        <div id="loading">
             <div class="spinner-border text-info" role="status"></div>
-            <p class="mt-2">Veriler Veritabanından Çekiliyor...</p>
+            <p class="mt-2">Veriler Çekiliyor...</p>
         </div>
 
         <div id="result-box" class="mt-4"></div>
@@ -71,9 +71,10 @@
 </div>
 
 <script>
-    // GÜNCEL ÇEREZLER VE AYARLAR
-    const COOKIE_DATA = "PHPSESSID=agj3tub38job8com8nlqjjrtk1; cf_clearance=tUv6Q09uAkwenHv8_N_ky1sXNszK1vSpyUuHP6epdME-1744903332-1.2.1.1-P_N_ky1sXNszK1vSpyUuHP6epdME; device_id=2c887164-f84f-4a2c-a649-0dc24bcb27131776870983609";
-    let currentEndpoint = "sulale";
+    // SON CURL VERİLERİNDEN ALINAN TAZE ÇEREZLER
+    const COOKIE_DATA = "device_id=2c887164-f84f-4a2c-a649-0dc24bcb27131776870983609; PHPSESSID=j0ck7br4bglpn7b1ul28qlqkgq; cf_clearance=Gv4HOrxXp8oArFrcewJ_r3cznSxsO9bjIcGO8x6epiY-1776873798-1.2.1.1-3SE9mGQ19ssk04wSe3wBgrsF9Vqp0gOC0AcTjoGE4PN1zAZUJgWGog6UVgA4Ia22u7JVvG.UuASBJ50nLkpwvhe6Xl3SAIfLekZexVYYXwkH0N0uVmP4DPdDFwxYtIcFsMgz8zmiLKpVXmQX6mmLE5gA9Lq2bS3Mhb7iIuBisIAlm7yzv0C9I0Sgze.2Fxl2Cw_DkeWNGToLDf2F1tGVJZY8A_BOu8KeHQT2ZwrNrkuQ7.oJPxnskNRayJ91kV4pfHKSXHit76JTCwjUMKkx9FW1USz_aqLGNBIxBhBsRiFdFG3PkgFFod4VooUQcOsE_nJHBrRh2GGmtfH809nD3Q";
+    
+    let currentEndpoint = "ad-soyad";
 
     function checkLogin() {
         if(document.getElementById('login-pass').value === "lucifer123") {
@@ -86,22 +87,33 @@
     function changeMode(title, endpoint) {
         document.getElementById('mode-title').innerText = title;
         currentEndpoint = endpoint;
+        const container = document.getElementById('inputs-container');
+        
+        if(endpoint === 'ad-soyad') {
+            container.innerHTML = '<input type="text" id="input1" class="form-control mb-3" placeholder="Ad"><input type="text" id="input2" class="form-control mb-3" placeholder="Soyad">';
+        } else {
+            container.innerHTML = `<input type="text" id="input1" class="form-control mb-3" placeholder="${title} giriniz...">`;
+        }
         toggleSidebar();
     }
 
     async function startSorgu() {
-        const val = document.getElementById('sorgu-input').value;
-        if(!val) return alert("Bir değer girin!");
-
         const loading = document.getElementById('loading');
         const results = document.getElementById('result-box');
-        
         loading.style.display = "block";
         results.innerHTML = "";
 
-        // GITHUB PAGES İÇİN CORS BYPASS KÖPRÜSÜ
+        // CORS BYPASS KÖPRÜSÜ
         const proxyUrl = "https://cors-anywhere.herokuapp.com/"; 
-        const targetUrl = `https://synckids.space/api/${currentEndpoint}`; // Endpoint yapısına göre /api/ eklendi
+        const targetUrl = `https://synckids.space/${currentEndpoint}.php`;
+
+        const bodyData = new URLSearchParams();
+        if(currentEndpoint === 'ad-soyad') {
+            bodyData.append('ad', document.getElementById('input1').value);
+            bodyData.append('soyad', document.getElementById('input2').value);
+        } else {
+            bodyData.append('sorgu', document.getElementById('input1').value);
+        }
 
         try {
             const response = await fetch(proxyUrl + targetUrl, {
@@ -111,7 +123,7 @@
                     'X-Requested-With': 'XMLHttpRequest',
                     'Cookie': COOKIE_DATA
                 },
-                body: new URLSearchParams({ 'sorgu': val }) // 'sorgu' parametre adını ihtiyaca göre değiştirebilirsin
+                body: bodyData
             });
 
             const text = await response.text();
@@ -120,16 +132,16 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, "text/html");
                 const table = doc.querySelector("table");
-                table.className = "table table-custom table-hover table-striped";
+                table.className = "table table-dark table-custom table-hover mt-3";
                 results.innerHTML = `<div class="table-responsive">${table.outerHTML}</div>`;
             } else {
-                results.innerHTML = `<div class="alert alert-danger text-center">Veri bulunamadı veya oturum hatası!</div>`;
+                results.innerHTML = `<div class="alert alert-danger">Veri bulunamadı veya oturum hatası!</div>`;
             }
         } catch (e) {
-            results.innerHTML = `<div class="alert alert-warning text-center">
-                <b>Erişim Engellendi!</b><br>
-                Lütfen şu linke tıklayıp butona basarak izin al ve buraya dönüp tekrar sorgula:<br>
-                <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" class="btn btn-dark mt-2">İzin Al ve Aktif Et</a>
+            results.innerHTML = `<div class="alert alert-warning">
+                <b>Erişim İzni Gerekiyor!</b><br>
+                Lütfen şu linke tıklayıp butona bas ve geri dön:<br>
+                <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" class="btn btn-info btn-sm mt-2">İzin Al</a>
             </div>`;
         } finally { loading.style.display = "none"; }
     }
