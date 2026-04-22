@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUCIFER & USERLOOS | DENIS34</title>
+    <title>LUCIFER & USERLOOS | TEKKALPLI43</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
@@ -22,7 +22,6 @@
         .btn-custom { background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue); font-weight: bold; transition: 0.4s; border-radius: 10px; text-transform: uppercase; }
         .btn-custom:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 20px var(--neon-blue); }
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .table-custom { background: #1a1a1a !important; color: white !important; border: 1px solid var(--neon-blue); }
         #loading { display: none; margin: 20px 0; }
     </style>
 </head>
@@ -31,9 +30,10 @@
 <div id="login-screen">
     <h2 class="navbar-brand mb-4">LUCIFER & USERLOOS</h2>
     <div class="card-custom" style="width: 320px;">
+        <p class="text-center small text-muted">Panel Girişi (tekkalpli43)</p>
         <input type="text" id="login-user" class="form-control" placeholder="Kullanıcı Adı">
         <input type="password" id="login-pass" class="form-control" placeholder="Şifre">
-        <button onclick="checkLogin()" class="btn btn-custom w-100">Sisteme Sız</button>
+        <button onclick="checkLogin()" class="btn btn-custom w-100">YETKİ AL</button>
     </div>
 </div>
 
@@ -46,24 +46,23 @@
 
 <div class="sidebar" id="sidebar">
     <a class="nav-link" onclick="changeMode('TC Sorgu', 'tckn-sorgu')"><i class="fas fa-id-card me-2"></i> TC Sorgu</a>
+    <a class="nav-link" onclick="changeMode('Sülale Sorgu', 'sulale-sorgu')"><i class="fas fa-users me-2"></i> Sülale Sorgu</a>
     <a class="nav-link" onclick="changeMode('Ad Soyad Sorgu', 'ad-soyad')"><i class="fas fa-search me-2"></i> Ad Soyad Sorgu</a>
-    <a class="nav-link" onclick="changeMode('Sülale Sorgu', 'sulale')"><i class="fas fa-users me-2"></i> Sülale Sorgu</a>
-    <a class="nav-link" onclick="changeMode('GSM Sorgu', 'gsm')"><i class="fas fa-phone me-2"></i> GSM Sorgu</a>
 </div>
 
-<div class="main-content" id="main-content">
+<div class="main-content">
     <div class="container text-center">
         <h3 id="mode-title">TC Sorgu</h3>
         <div class="card-custom mt-4 mx-auto" style="max-width: 500px;">
             <div id="inputs-container">
-                <input type="text" id="main_val" class="form-control" placeholder="TC Kimlik Numarası...">
+                <input type="text" id="dynamic_val" class="form-control" placeholder="Sorgulanacak TC No...">
             </div>
-            <button onclick="startSorgu()" class="btn btn-custom w-100 py-3 mt-2">VERİYİ GETİR</button>
+            <button onclick="startSorgu()" class="btn btn-custom w-100 py-3 mt-2">SORGULA</button>
         </div>
 
         <div id="loading">
             <div class="spinner-border text-info" role="status"></div>
-            <p class="mt-2">Sunucuya Bağlanılıyor...</p>
+            <p class="mt-2">Veriler çekiliyor...</p>
         </div>
 
         <div id="result-box" class="mt-4"></div>
@@ -71,17 +70,18 @@
 </div>
 
 <script>
-    // SON CURL VERİLERİ (19:25 GÜNCEL)
-    const COOKIE_DATA = "device_id=2c887164-f84f-4a2c-a649-0dc24bcb27131776870983609; PHPSESSID=j0ck7br4bglpn7b1ul28qlqkgq; cf_clearance=DJF3o7fyFfzgjcN.B2tns00xx9UU6AIP4ppiNO74RlA-1776874918-1.2.1.1-oQ3OtsPcDV3yubqym4yfgCslZ95vIqFaoPTzHj.94OxMJVjKn19wRUTS5D9Zq7zDSOS4oGl925o8e4KJ783c2SSC6D7EZ6L5pnw3WRBphrImDup8MiwH6VTop946nwqAaotq7zJKU3ZNvZq8kbnqz2wcjNJaNqhfoRRPUUr8oJQdE1fWHIX9seZclll9smUwgWngeLRrJtNfKFz6lhtV7ssYM.lB3ZuVwU7o5i.aJCD29MLbpo1JQA2K0XySzD2kRt3ZEOvgr3v.JTPzJ8AcZ5iovf7P3pCetOaIzfOkFeZMxkfYx3G79SnYmDN5rB5_dbboknM1WESXlZxjfVT3Zg";
+    // En son attığın cURL'den gelen geçerli çerezler (PHPSESSID ve cf_clearance)
+    const COOKIE_DATA = "device_id=241f99b5-fb7b-4732-9617-f90a81d60d631776828930941; PHPSESSID=d2v6nce18ccgjsnlsru0j3op39; cf_clearance=pFjmFB29xUhW0pBdFuYCt0WzyWywp5mzyUXWOAo4IzE-1776875701-1.2.1.1-xGbmOPVnCvo93YNlCWGYhv_HjvfE55OZvMkDuK_ESSsqVIZUPbmD8BIfOZVCy8aHZ_JRdyB3rktKRvecByQuC7IQNUI2nAhDM8G7M3sMIj8x36MyJxlcdpff45ajfzLzSLzRY4W6Lfog9oGavh2eQ4wl0ScgBobAnml9kAnf2p.HuLebUkIPbJV_T_0rG1XSdEuxvCuQP54tLJG2i1mihMNPSEQVTYNivD206w.wIPpTKaLSmugQRcLDBwndF9aC.agmdTDXH5W2LzymxFZvMedPP6W38fUUPbaJMQP0sjgqw5RgvQAPNikLs3BSEzpkU0x4dnyApktGRSohfHHxAA";
     
     let currentEndpoint = "tckn-sorgu";
 
     function checkLogin() {
         const u = document.getElementById('login-user').value;
         const p = document.getElementById('login-pass').value;
-        if(u === "denis34" && p === "567890123a") {
+        // Panel girişi için aynı bilgileri kullanıyoruz
+        if(u === "tekkalpli43" && p === "567890123a") {
             document.getElementById('login-screen').style.display = "none";
-        } else { alert("Geçersiz Kimlik Bilgileri!"); }
+        } else { alert("Panel erişim reddedildi!"); }
     }
 
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
@@ -90,17 +90,14 @@
         document.getElementById('mode-title').innerText = title;
         currentEndpoint = endpoint;
         const container = document.getElementById('inputs-container');
-        
         if(endpoint === 'ad-soyad') {
             container.innerHTML = `
                 <input type="text" id="ad" class="form-control" placeholder="Ad">
                 <input type="text" id="soyad" class="form-control" placeholder="Soyad">
-                <input type="text" id="il" class="form-control" placeholder="İl (Opsiyonel)">
-                <input type="text" id="ilce" class="form-control" placeholder="İlçe (Opsiyonel)">`;
-        } else if(endpoint === 'tckn-sorgu') {
-            container.innerHTML = `<input type="text" id="tc" class="form-control" placeholder="TC Numarası Giriniz...">`;
+                <input type="text" id="il" class="form-control" placeholder="İl">
+                <input type="text" id="ilce" class="form-control" placeholder="İlçe">`;
         } else {
-            container.innerHTML = `<input type="text" id="generic_val" class="form-control" placeholder="${title} değerini giriniz...">`;
+            container.innerHTML = `<input type="text" id="dynamic_val" class="form-control" placeholder="${title} için veri girin...">`;
         }
         toggleSidebar();
     }
@@ -120,10 +117,9 @@
             bodyData.append('soyad', document.getElementById('soyad').value);
             bodyData.append('il', document.getElementById('il').value);
             bodyData.append('ilce', document.getElementById('ilce').value);
-        } else if(currentEndpoint === 'tckn-sorgu') {
-            bodyData.append('tc', document.getElementById('tc').value);
         } else {
-            bodyData.append('sorgu', document.getElementById('generic_val').value);
+            const inputVal = document.getElementById('dynamic_val').value;
+            bodyData.append('tc', inputVal);
         }
 
         try {
@@ -140,18 +136,17 @@
             const text = await response.text();
             
             if (text.includes("<table")) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, "text/html");
+                const doc = new DOMParser().parseFromString(text, "text/html");
                 const table = doc.querySelector("table");
-                table.className = "table table-dark table-hover mt-3 border-info";
+                table.className = "table table-dark table-striped mt-3 border-info";
                 results.innerHTML = `<div class="table-responsive">${table.outerHTML}</div>`;
             } else {
-                results.innerHTML = `<div class="alert alert-danger">Veritabanı bağlantısı koptu veya oturum geçersiz.</div>`;
+                results.innerHTML = `<div class="alert alert-danger"><b>Oturum Hatası:</b> synckids.space üzerinden yeni bir cURL almanız gerekiyor.</div>`;
             }
         } catch (e) {
             results.innerHTML = `<div class="alert alert-warning">
-                <b>Proxy Onayı Gerekli</b><br>
-                <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" class="btn btn-info btn-sm mt-2">Sistemi Aktif Et</a>
+                <b>CORS Proxy İzni Alınmamış!</b><br>
+                <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" class="btn btn-info btn-sm mt-2">Buraya Tıklayıp 'Request Access' Butonuna Basın</a>
             </div>`;
         } finally { loading.style.display = "none"; }
     }
